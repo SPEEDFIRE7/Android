@@ -1,0 +1,30 @@
+name: Ubuntu RDP via bore
+
+on:
+  workflow_dispatch:
+    inputs:
+      username:
+        description: "اسم مستخدم RDP"
+        required: true
+        default: "myuser"
+      password:
+        description: "كلمة المرور"
+        required: true
+        default: "admin"
+
+jobs:
+  rdp:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+
+    steps:
+      - name: Install desktop and xrdp
+        run: |
+          sudo apt-get update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
+            xfce4 xfce4-goodies xrdp dbus-x11
+
+      - name: Create RDP user
+        env:
+          RDP_USER: ${{ inputs.username }}
+          RDP_PASS: ${{ inputs.password }}
